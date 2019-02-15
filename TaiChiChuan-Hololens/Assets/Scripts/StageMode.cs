@@ -53,9 +53,9 @@ public class StageMode : MonoBehaviour {
 
 		//handling stage num >= 2
 		if (director.stageCode.Count >= 3)
-			stageTextMesh.text = "<< " + director.stage[director.stageCode[director.stageCode.Count - 2]] + " → " + director.stage[director.stageCode[director.stageCode.Count - 1]];
+			stageTextMesh.text = "<color=#817B7BFF>" + "<< " + director.stage[director.stageCode[director.stageCode.Count - 2]] + "</color>" + " → " + director.stage[director.stageCode[director.stageCode.Count - 1]];
 		else if (director.stageCode.Count == 2)
-			stageTextMesh.text = director.stage[director.stageCode[director.stageCode.Count - 2]] + " → " + director.stage[director.stageCode[director.stageCode.Count - 1]];
+			stageTextMesh.text = "<color=#817B7BFF>" + director.stage[director.stageCode[director.stageCode.Count - 2]] + "</color>" + " → " + director.stage[director.stageCode[director.stageCode.Count - 1]];
 		else
 			stageTextMesh.text = director.stage[director.stageCode[director.stageCode.Count - 1]];
 

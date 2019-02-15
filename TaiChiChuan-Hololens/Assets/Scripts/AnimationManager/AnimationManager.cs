@@ -32,7 +32,17 @@ abstract public class AnimationManager
     public bool shouldPlaying = false;
     protected float speed;
     protected float lastSpeed = DEFAULT_SPEED;
-    public float LastSpeed { get { return lastSpeed; } }
+    public float LastSpeed
+	{
+		get
+		{
+			return lastSpeed;
+		}
+		set
+		{
+			lastSpeed = value;
+		}
+	}
 
     // Record the current time of animation, presented in 0.0~1.0 .
     private float currentTime;

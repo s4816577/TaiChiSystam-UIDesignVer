@@ -174,4 +174,9 @@ public class AvatarsController : MonoBehaviour
 		foreach (MeshRenderer renderer in renderers2)
 			renderer.enabled = IsActive;
 	}
+
+	public void SetAvatarsHeight(float height)
+	{
+		AvatarsHeight = height;
+	}
 }

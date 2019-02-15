@@ -207,6 +207,16 @@ public class ResourcePool
 		return Resources.Load<GameObject>("Prefabs/SingleModeControlPanel");
 	}
 
+	public GameObject GetSpeedControlPanelPrefab()
+	{
+		return Resources.Load<GameObject>("Prefabs/SpeedControlPanel");
+	}
+
+	public GameObject GetHeightControlPanelPrefab()
+	{
+		return Resources.Load<GameObject>("Prefabs/HeightControlPanel");
+	}
+
 	public GameObject GetMirrorControlPanelPrefab()
     {
         return Resources.Load<GameObject>("Prefabs/MirrorControlPanel");

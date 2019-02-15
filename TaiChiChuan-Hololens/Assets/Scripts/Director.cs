@@ -24,6 +24,7 @@ public class Director : MonoBehaviour
     public GameObject ControlPanel { get { return controlPanel; } }
 
 	private int count = 0;
+	public float LastAvatarsHeight = -0.34f;
 	public bool IsUsingControlPanel = true;
 
 	public string[] stage = {"楊氏太極拳", "套路模式", "單招模式", "分解動作", "系統設定", "指令說明", "調整高度", "調整速度"};
@@ -80,7 +81,7 @@ public class Director : MonoBehaviour
 						{
 							Invoke("GoToDetailMode", 1f);
 						}
-						else if (count == 2)
+						else if (count >= 2)
 						{
 							CancelInvoke("GoToDetailMode");
 							GoBackMainMenu();
@@ -99,7 +100,7 @@ public class Director : MonoBehaviour
 							CancelInvoke("Next");
 							Invoke("GoBackSeriesMode", 1f);
 						}
-						else if (count == 3)
+						else if (count >= 3)
 						{
 							CancelInvoke("GoBackSeriesMode");
 							CancelInvoke("Next");
@@ -117,7 +118,7 @@ public class Director : MonoBehaviour
 						{
 							Invoke("GoToDetailMode", 1f);
 						}
-						else if (count == 2)
+						else if (count >= 2)
 						{
 							CancelInvoke("GoToDetailMode");
 							GoBackSingleMenu();
@@ -136,7 +137,7 @@ public class Director : MonoBehaviour
 							CancelInvoke("Next");
 							Invoke("GoBackSingleMode", 1f);
 						}
-						else if (count == 3)
+						else if (count >= 3)
 						{
 							CancelInvoke("GoBackSingleMode");
 							CancelInvoke("Next");
@@ -151,10 +152,27 @@ public class Director : MonoBehaviour
 				if (stageCode[stageCode.Count - 1] == 5 || stageCode[stageCode.Count - 1] == 4 || stageCode[stageCode.Count - 1] == 2)
 				{
 					count++;
-
-					if (count >= 2)
+					if (count == 1)
 					{
+						Invoke("ResetCount", 1f);
+					}
+					else if (count >= 2)
+					{
+						CancelInvoke("ResetCount");
 						GoBackMainMenu();
+					}
+				}
+				else if (stageCode[stageCode.Count - 1] == 7 || stageCode[stageCode.Count - 1] == 6)
+				{
+					count++;
+					if (count == 1)
+					{
+						Invoke("ResetCount", 1f);
+					}
+					else if (count >= 2)
+					{
+						CancelInvoke("ResetCount");
+						GoBackSystemSettingMenu();
 					}
 				}
 			}
@@ -488,6 +506,24 @@ public class Director : MonoBehaviour
 		controlPanel = SingleModeControlPanel.InstantiateGameObject();
 	}
 
+	public void SetSpeedControlPanel()
+	{
+		IsUsingControlPanel = true;
+		DestroyControlPanel();
+		UnActiveAvatars();
+		count = 0;
+		controlPanel = SpeedControlPanel.InstantiateGameObject();
+	}
+
+	public void SetHeightControlPanel()
+	{
+		IsUsingControlPanel = true;
+		DestroyControlPanel();
+		UnActiveAvatars();
+		count = 0;
+		controlPanel = HeightControlPanel.InstantiateGameObject();
+	}
+
 	public void SetMirrorControlPanel()
     {
         DestroyControlPanel();
@@ -561,6 +597,14 @@ public class Director : MonoBehaviour
 		Pause();
 		count = 0;
 	}
+
+	private void GoBackSystemSettingMenu()
+	{
+		stageCode.RemoveAt(stageCode.Count - 1);
+		SetSystemSettingControlPanel();
+		//Pause();
+		count = 0;
+	}
 	/*
 	public void SetBackgroundScale()
 	{
@@ -579,8 +623,44 @@ public class Director : MonoBehaviour
 		avatarsController.ActiveAvatars(true);
 	}
 
+	private void ResetCount()
+	{
+		count = 0;
+	}
+
+	//for speed control panel only
+	public void SetInitSpeed(float speed)
+	{
+		userInterface.CreateCommandName("SetSpeed");
+		animationManager.LastSpeed = speed;
+		count = 0;
+	}
+
 	public void UnitTest()
 	{
-		SetRestartInd(3);
+		SetHeightControlPanel();
+		ActiveAvatars();
+	}
+
+	public void UnitTestTwo()
+	{
+	}
+
+	public void HeightUp()
+	{
+		avatarsController.SetAvatarsHeight(LastAvatarsHeight + 0.025f);
+		HeightControlPanel[] script = GameObject.FindObjectsOfType<HeightControlPanel>();
+		script[0].SetCoachHeight(LastAvatarsHeight + 0.025f);
+		count = 0;
+		LastAvatarsHeight = LastAvatarsHeight + 0.025f;
+	}
+
+	public void HeightDown()
+	{
+		avatarsController.SetAvatarsHeight(LastAvatarsHeight - 0.025f);
+		HeightControlPanel[] script = GameObject.FindObjectsOfType<HeightControlPanel>();
+		script[0].SetCoachHeight(LastAvatarsHeight - 0.025f);
+		count = 0;
+		LastAvatarsHeight = LastAvatarsHeight - 0.025f;
 	}
 }
