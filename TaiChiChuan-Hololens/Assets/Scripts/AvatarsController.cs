@@ -179,4 +179,9 @@ public class AvatarsController : MonoBehaviour
 	{
 		AvatarsHeight = height;
 	}
+
+	public void SetToFront()
+	{
+		coachPositionMode.SetRotation();
+	}
 }

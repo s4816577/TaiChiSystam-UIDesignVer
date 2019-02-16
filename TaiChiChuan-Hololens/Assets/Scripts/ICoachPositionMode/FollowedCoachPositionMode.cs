@@ -29,4 +29,9 @@ public class FollowedCoachPositionMode : ICoachPositionMode
 		clocks.transform.rotation = rotation;
 		clocks.transform.Translate(Vector3.up * height);
 	}
+
+	public void SetRotation()
+	{
+		this.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
+	}
 }

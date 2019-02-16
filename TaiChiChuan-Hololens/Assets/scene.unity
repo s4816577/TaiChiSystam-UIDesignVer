@@ -181,9 +181,9 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 660132849}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.17, y: 0.189, z: -0.001}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.225, y: 0.2, z: -0.001}
+  m_LocalScale: {x: 0.0062, y: 0.0062, z: 0.0062}
   m_Children: []
   m_Father: {fileID: 2043219091}
   m_RootOrder: 1
@@ -613,6 +613,23 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+  - Keyword: UnitTestTwo
+    Response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1146926002}
+          m_MethodName: UnitTestTwo
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   IsGlobalListener: 1
   PersistentKeywords: 0
 --- !u!114 &1051233189
@@ -669,6 +686,8 @@ MonoBehaviour:
     KeyCode: 105
   - Keyword: HeightDown
     KeyCode: 111
+  - Keyword: UnitTestTwo
+    KeyCode: 121
   recognitionConfidenceLevel: 1
 --- !u!4 &1051233190
 Transform:
@@ -847,6 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bd2d9de628442448aac19d6c8bb28a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LastAvatarsHeight: -0.34
   IsUsingControlPanel: 1
   stage:
   - "\u694A\u6C0F\u592A\u6975\u62F3"
@@ -1026,8 +1046,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2057356901}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -0.21, y: 0.189, z: 0}
-  m_LocalScale: {x: 0.5642, y: 0.13, z: 0.0009999999}
+  m_LocalPosition: {x: -0.225, y: 0.2, z: 0}
+  m_LocalScale: {x: 0.388, y: 0.08185493, z: 0.00062965334}
   m_Children: []
   m_Father: {fileID: 2043219091}
   m_RootOrder: 0

@@ -273,45 +273,60 @@ public class Director : MonoBehaviour
     // For speech input handler.
     public void Play()
     {
-        userInterface.CreateCommandName("Play");
-        playbackState.Play();
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
+		{
+			userInterface.CreateCommandName("Play");
+			playbackState.Play();
+		}
     }
 
     public void Pause()
     {
-        userInterface.CreateCommandName("Pause");
-        playbackState.Pause();
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
+		{
+			userInterface.CreateCommandName("Pause");
+			playbackState.Pause();
+		}
     }
 
     public void Restart()
     {
-        userInterface.CreateCommandName("Restart");
-        playbackState.Restart();
-        Followed();
+		if (!IsUsingControlPanel)
+		{
+			userInterface.CreateCommandName("Restart");
+			playbackState.Restart();
+			Followed();
 
-        if(additionalHint is MirrorAdditionalHint)
-        {
-            SetMirrorAdditionalHint();
-        }
+			if (additionalHint is MirrorAdditionalHint)
+			{
+				SetMirrorAdditionalHint();
+			}
+		}
     }
 
     public void Freeze()
     {
-        userInterface.CreateCommandName("Freeze");
-        avatarsController.SetCoachPositionMode(new FreezedCoachPositionMode());
-        playbackState.Pause();
+		if (!IsUsingControlPanel)
+		{
+			userInterface.CreateCommandName("Freeze");
+			avatarsController.SetCoachPositionMode(new FreezedCoachPositionMode());
+			playbackState.Pause();
+		}
     }
 
     public void ResetFollowed()
     {
-        userInterface.CreateCommandName("Reset");
-        Followed();
-        playbackState.Pause();
+		if (!IsUsingControlPanel)
+		{
+			userInterface.CreateCommandName("Reset");
+			Followed();
+			playbackState.Pause();
 
-        if (additionalHint is MirrorAdditionalHint)
-        {
-            SetMirrorAdditionalHint();
-        }
+			if (additionalHint is MirrorAdditionalHint)
+			{
+				SetMirrorAdditionalHint();
+			}
+		}
     }
 
     private void Followed()
@@ -347,16 +362,22 @@ public class Director : MonoBehaviour
 
     public void Next()
     {
-        userInterface.CreateCommandName("Next");
-        playbackState.Next();
-        count = 0;
+		if (!IsUsingControlPanel)
+		{
+			userInterface.CreateCommandName("Next");
+			playbackState.Next();
+			count = 0;
+		}
     }
 
     public void Last()
     {
-        userInterface.CreateCommandName("Last");
-        playbackState.Last();
-        count = 0;
+		if (!IsUsingControlPanel)
+		{
+			userInterface.CreateCommandName("Last");
+			playbackState.Last();
+			count = 0;
+		}
     }
 
     public void NextMovement()
@@ -538,11 +559,12 @@ public class Director : MonoBehaviour
 
 	public void SetRestartInd(int Ind)
 	{
+		DisableUsingControlPanel();
 		//userInterface.CreateCommandName("Change Movement");
 		ActiveAvatars();
+		avatarsController.SetToFront();
 		playbackState.SetRestartInd(Ind);
 		count = 0;
-		DisableUsingControlPanel();
 		//Invoke("DisableUsingControlPanel", 2f);
 	}
 	/*
@@ -559,29 +581,31 @@ public class Director : MonoBehaviour
 	private void GoBackSeriesMode()
 	{
 		stageCode.RemoveAt(stageCode.Count - 1);
-		SetRestartInd(0);
+		Pause();
+		//SetRestartInd(0);
 		count = 0;
 	}
 
 	private void GoBackSingleMode()
 	{
 		stageCode.RemoveAt(stageCode.Count - 1);
-		SetRestartInd(animationManager.restartInd);
+		Pause();
+		//SetRestartInd(animationManager.restartInd);
 		count = 0;
 	}
 
 	private void GoToDetailMode()
 	{
-		stageCode.Add(3);
 		Pause();
+		stageCode.Add(3);
 		count = 0;
 	}
 
 	private void GoBackMainMenu()
 	{
+		Pause();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		SetLevel1ControlPanel();
-		Pause();
 		count = 0;
 		if (singleMode)
 			singleMode = false;
@@ -638,12 +662,12 @@ public class Director : MonoBehaviour
 
 	public void UnitTest()
 	{
-		SetHeightControlPanel();
-		ActiveAvatars();
+		SetSpeedControlPanel();
 	}
 
 	public void UnitTestTwo()
 	{
+		SetRestartInd(10);
 	}
 
 	public void HeightUp()

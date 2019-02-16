@@ -86,7 +86,7 @@ public class RepeatPlaying : MonoBehaviour {
 		{
 			anim.speed = CurrentPlayingSpeed;
 			LastPlayingSpeed = CurrentPlayingSpeed;
-			Reset();
+			//Reset();
 		}
 	}
 
