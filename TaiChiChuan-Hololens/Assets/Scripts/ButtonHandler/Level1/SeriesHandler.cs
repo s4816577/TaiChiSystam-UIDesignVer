@@ -20,6 +20,8 @@ public class SeriesHandler : ButtonHandler
 
 	protected override void ProcessInputClicked(InputClickedEventData eventData)
 	{
+		director.SaveInformation("進入套路模式");
+		director.NotShowingPauseLog();
 		director.stageCode.Add(1);
 		director.seriesMode = true;
 		director.SetRestartInd(0);

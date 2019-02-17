@@ -29,6 +29,7 @@ public class SingleHandler : ButtonHandler
 
 	protected override void ProcessInputClicked(InputClickedEventData eventData)
 	{
+		director.SaveInformation("進入16招選擇頁面");
 		director.stageCode.Add(2);
 		director.singleMode = true;
 		if (director.seriesMode)

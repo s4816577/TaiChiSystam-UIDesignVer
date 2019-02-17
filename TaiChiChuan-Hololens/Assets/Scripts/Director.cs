@@ -31,12 +31,17 @@ public class Director : MonoBehaviour
 	public List<int> stageCode;
 	public bool seriesMode = false;
 	public bool singleMode = false;
+	private bool showingPause = true;
+
+	private FileWriter fileWriter;
 
 	// Use this for initialization
 	void Start()
     {
-		//Add init stage
+		//Add init stage and get file writer
 		stageCode.Add(0);
+		GameObject g = GameObject.Find("FileWriter");
+		fileWriter = g.GetComponent<FileWriter>();
 
         // For playing Sound.
         audioSource = this.gameObject.AddComponent<AudioSource>();
@@ -175,6 +180,19 @@ public class Director : MonoBehaviour
 						GoBackSystemSettingMenu();
 					}
 				}
+				else if (stageCode[stageCode.Count - 1] == 0)
+				{
+					count++;
+					if (count == 1 || count == 2)
+					{
+						Invoke("ResetCount", 1f);
+					}
+					else if (count >= 3)
+					{
+						CancelInvoke("ResetCount");
+						CreateNewFileAndStartRecording();
+					}
+				}
 			}
 			//if (controlPanel == null)
 			//{
@@ -275,6 +293,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
 		{
+			SaveInformation("觸發Play");
 			userInterface.CreateCommandName("Play");
 			playbackState.Play();
 		}
@@ -284,6 +303,10 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
 		{
+			if (showingPause)
+				SaveInformation("觸發Pause");
+			else
+				showingPause = true;
 			userInterface.CreateCommandName("Pause");
 			playbackState.Pause();
 		}
@@ -293,6 +316,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel)
 		{
+			SaveInformation("觸發Restart");
 			userInterface.CreateCommandName("Restart");
 			playbackState.Restart();
 			Followed();
@@ -308,6 +332,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel)
 		{
+			SaveInformation("觸發Freeze");
 			userInterface.CreateCommandName("Freeze");
 			avatarsController.SetCoachPositionMode(new FreezedCoachPositionMode());
 			playbackState.Pause();
@@ -318,6 +343,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel)
 		{
+			SaveInformation("觸發Reset");
 			userInterface.CreateCommandName("Reset");
 			Followed();
 			playbackState.Pause();
@@ -364,6 +390,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel)
 		{
+			SaveInformation("觸發Next");
 			userInterface.CreateCommandName("Next");
 			playbackState.Next();
 			count = 0;
@@ -374,6 +401,7 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel)
 		{
+			SaveInformation("觸發Last");
 			userInterface.CreateCommandName("Last");
 			playbackState.Last();
 			count = 0;
@@ -512,6 +540,7 @@ public class Director : MonoBehaviour
 
 	public void SetDescriptionControlPanel()
 	{
+		SaveInformation("進入指令說明頁面");
 		IsUsingControlPanel = true;
 		//userInterface.CreateCommandName("Menu");
 		DestroyControlPanel();
@@ -529,6 +558,7 @@ public class Director : MonoBehaviour
 
 	public void SetSpeedControlPanel()
 	{
+		SaveInformation("進入速度調整頁面");
 		IsUsingControlPanel = true;
 		DestroyControlPanel();
 		UnActiveAvatars();
@@ -538,6 +568,7 @@ public class Director : MonoBehaviour
 
 	public void SetHeightControlPanel()
 	{
+		SaveInformation("進入高度調整頁面");
 		IsUsingControlPanel = true;
 		DestroyControlPanel();
 		UnActiveAvatars();
@@ -559,6 +590,10 @@ public class Director : MonoBehaviour
 
 	public void SetRestartInd(int Ind)
 	{
+		if (stageCode[stageCode.Count - 1] != 1)
+		{
+			SaveInformation("選擇第" + Ind.ToString() + "招，並進入單招模式");
+		}
 		DisableUsingControlPanel();
 		//userInterface.CreateCommandName("Change Movement");
 		ActiveAvatars();
@@ -580,6 +615,8 @@ public class Director : MonoBehaviour
 
 	private void GoBackSeriesMode()
 	{
+		SaveInformation("回到套路模式");
+		NotShowingPauseLog();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		Pause();
 		//SetRestartInd(0);
@@ -588,6 +625,8 @@ public class Director : MonoBehaviour
 
 	private void GoBackSingleMode()
 	{
+		SaveInformation("回到單招模式");
+		NotShowingPauseLog();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		Pause();
 		//SetRestartInd(animationManager.restartInd);
@@ -596,6 +635,8 @@ public class Director : MonoBehaviour
 
 	private void GoToDetailMode()
 	{
+		SaveInformation("進入分解模式");
+		NotShowingPauseLog();
 		Pause();
 		stageCode.Add(3);
 		count = 0;
@@ -603,6 +644,8 @@ public class Director : MonoBehaviour
 
 	private void GoBackMainMenu()
 	{
+		SaveInformation("回到主頁面");
+		NotShowingPauseLog();
 		Pause();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		SetLevel1ControlPanel();
@@ -615,6 +658,8 @@ public class Director : MonoBehaviour
 
 	private void GoBackSingleMenu()
 	{
+		SaveInformation("回到單招招式選擇頁面");
+		NotShowingPauseLog();
 		//no need to pop
 		//stageCode.RemoveAt(stageCode.Count - 1);
 		SetSingleModeControlPanel();
@@ -624,6 +669,7 @@ public class Director : MonoBehaviour
 
 	private void GoBackSystemSettingMenu()
 	{
+		SaveInformation("回到系統設定頁面");
 		stageCode.RemoveAt(stageCode.Count - 1);
 		SetSystemSettingControlPanel();
 		//Pause();
@@ -655,8 +701,17 @@ public class Director : MonoBehaviour
 	//for speed control panel only
 	public void SetInitSpeed(float speed)
 	{
+		SaveInformation("教練速度，設定為" + speed.ToString());
 		userInterface.CreateCommandName("SetSpeed");
 		animationManager.LastSpeed = speed;
+		count = 0;
+	}
+
+	public void CreateNewFileAndStartRecording()
+	{
+		userInterface.CreateCommandName("Create New File and Start Recording");
+		fileWriter.InitRecording();
+		fileWriter.SaveInformationToFile("開始記錄");
 		count = 0;
 	}
 
@@ -672,6 +727,7 @@ public class Director : MonoBehaviour
 
 	public void HeightUp()
 	{
+		SaveInformation("教練高度，調高2.5公分");
 		avatarsController.SetAvatarsHeight(LastAvatarsHeight + 0.025f);
 		HeightControlPanel[] script = GameObject.FindObjectsOfType<HeightControlPanel>();
 		script[0].SetCoachHeight(LastAvatarsHeight + 0.025f);
@@ -681,10 +737,22 @@ public class Director : MonoBehaviour
 
 	public void HeightDown()
 	{
+		SaveInformation("教練高度，調低2.5公分");
 		avatarsController.SetAvatarsHeight(LastAvatarsHeight - 0.025f);
 		HeightControlPanel[] script = GameObject.FindObjectsOfType<HeightControlPanel>();
 		script[0].SetCoachHeight(LastAvatarsHeight - 0.025f);
 		count = 0;
 		LastAvatarsHeight = LastAvatarsHeight - 0.025f;
+	}
+
+	public void SaveInformation(string information)
+	{
+		fileWriter.SaveInformationToFile(information);
+	}
+
+	//for stage change log
+	public void NotShowingPauseLog()
+	{
+		showingPause = false;
 	}
 }

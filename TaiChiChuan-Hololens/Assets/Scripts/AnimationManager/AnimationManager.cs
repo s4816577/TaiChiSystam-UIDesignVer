@@ -232,6 +232,7 @@ abstract public class AnimationManager
             anim.Play("Animation", 0, taichiMovementArray[restartInd].NormalizedBeginTime);
         }
         SetSpeed(0.0f);
+		director.NotShowingPauseLog();
 		director.Pause();
 		avatarsController.ResetAvatersPosition(restartInd);
 	}

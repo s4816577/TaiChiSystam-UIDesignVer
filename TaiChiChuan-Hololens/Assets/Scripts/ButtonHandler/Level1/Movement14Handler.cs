@@ -30,6 +30,7 @@ public class Movement14Handler : ButtonHandler
 
 	protected override void ProcessInputClicked(InputClickedEventData eventData)
 	{
+		director.NotShowingPauseLog();
 		director.SetRestartInd(13);
 	}
 }

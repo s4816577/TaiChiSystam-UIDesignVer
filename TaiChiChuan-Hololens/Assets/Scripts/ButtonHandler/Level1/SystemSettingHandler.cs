@@ -28,6 +28,7 @@ public class SystemSettingHandler : ButtonHandler
 
 	protected override void ProcessInputClicked(InputClickedEventData eventData)
 	{
+		director.SaveInformation("進入系統設定頁面");
 		director.stageCode.Add(4);
 		if (director.singleMode)
 			director.singleMode = false;
