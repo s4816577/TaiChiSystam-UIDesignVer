@@ -24,6 +24,7 @@ public class SeriesHandler : ButtonHandler
 		director.NotShowingPauseLog();
 		director.stageCode.Add(1);
 		director.seriesMode = true;
+		director.ResetCount();
 		director.SetRestartInd(0);
 		if (director.singleMode)
 			director.singleMode = false;

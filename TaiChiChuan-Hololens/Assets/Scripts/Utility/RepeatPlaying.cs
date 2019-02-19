@@ -24,8 +24,8 @@ public class RepeatPlaying : MonoBehaviour {
 		//set init speed
 		anim.speed = CurrentPlayingSpeed;
 
-		//get init rotation
-		//initQuaternion = this.transform.rotation;
+		//adjust y
+		this.transform.localPosition = new Vector3(this.transform.localPosition.x, -0.043f, this.transform.localPosition.z);
 	}
 	
 	// Update is called once per frame
@@ -92,7 +92,7 @@ public class RepeatPlaying : MonoBehaviour {
 
 	private void Reset()
 	{
-		this.transform.localPosition = Vector3.zero;
+		this.transform.localPosition = new Vector3(0f, -0.043f, 0f);
 		this.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 	}
 

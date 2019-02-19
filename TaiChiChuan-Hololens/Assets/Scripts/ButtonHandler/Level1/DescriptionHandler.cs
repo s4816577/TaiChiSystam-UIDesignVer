@@ -29,6 +29,7 @@ public class DescriptionHandler : ButtonHandler
 	protected override void ProcessInputClicked(InputClickedEventData eventData)
 	{
 		director.stageCode.Add(5);
+		director.ResetCount();
 		if (director.singleMode)
 			director.singleMode = false;
 		if (director.seriesMode)

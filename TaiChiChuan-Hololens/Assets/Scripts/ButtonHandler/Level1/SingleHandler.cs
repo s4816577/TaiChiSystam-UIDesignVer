@@ -31,6 +31,7 @@ public class SingleHandler : ButtonHandler
 	{
 		director.SaveInformation("進入16招選擇頁面");
 		director.stageCode.Add(2);
+		director.ResetCount();
 		director.singleMode = true;
 		if (director.seriesMode)
 			director.seriesMode = false;

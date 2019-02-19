@@ -15,7 +15,9 @@ public class CoachAvatar : IAvatar
     private Transform rightFoot;
     public Transform RightFoot { get { return rightFoot; } }
 
-    public CoachAvatar(GameObject coachAvatar)
+	private List<float> restartErrorOfYdirection = new List<float> { -0.006f, -0.004f, -0.009f, -0.043f, -0.045f, -0.045f, -0.031f, -0.011f, -0.042f, -0.026f, -0.041f, -0.046f, -0.043f, -0.025f, -0.036f, -0.039f };
+
+	public CoachAvatar(GameObject coachAvatar)
     {
         this.gameObject = coachAvatar;
         coach = this.gameObject.transform.Find("TaichiCoach");
@@ -48,12 +50,12 @@ public class CoachAvatar : IAvatar
     /// </summary>
     public void Update()
     {
-        coach.localPosition = Vector3.zero;
-    }
+		coach.localPosition = new Vector3(0.0f, coach.localPosition.y, 0.0f);
+	}
 
 	public void Reset(Transform clock, int restartInd)
 	{
-		coach.localPosition = Vector3.zero;
+		coach.localPosition = new Vector3(0.0f, restartErrorOfYdirection[restartInd], 0.0f);
 		coach.rotation = clock.rotation;
 	}
 }

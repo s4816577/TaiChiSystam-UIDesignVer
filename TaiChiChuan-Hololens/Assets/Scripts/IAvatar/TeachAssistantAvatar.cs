@@ -15,6 +15,8 @@ public class TeachAssistantAvatar : IAvatar
 	private Transform rightFoot;
 	public Transform RightFoot { get { return rightFoot; } }
 
+	private List<float> restartErrorOfYdirection = new List<float> { -0.006f, -0.004f, -0.009f, -0.043f, -0.045f, -0.045f, -0.031f, -0.011f, -0.042f, -0.026f, -0.041f, -0.046f, -0.043f, -0.025f, -0.036f, -0.039f };
+
 	public TeachAssistantAvatar(GameObject teachAssistantAvatar)
     {
         this.gameObject = teachAssistantAvatar;
@@ -33,12 +35,12 @@ public class TeachAssistantAvatar : IAvatar
 
     public void Update()
     {
-        teachAssistant.localPosition = Vector3.zero;
-    }
+		teachAssistant.localPosition = new Vector3(0.0f, teachAssistant.localPosition.y, 0.0f);
+	}
 
 	public void Reset(Transform clock, int restartInd)
 	{
-		teachAssistant.localPosition = Vector3.zero;
+		teachAssistant.localPosition = new Vector3(0.0f, restartErrorOfYdirection[restartInd], 0.0f);
 		teachAssistant.rotation = clock.rotation;
 	}
 }

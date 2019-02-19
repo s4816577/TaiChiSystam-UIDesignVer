@@ -693,7 +693,7 @@ public class Director : MonoBehaviour
 		avatarsController.ActiveAvatars(true);
 	}
 
-	private void ResetCount()
+	public void ResetCount()
 	{
 		count = 0;
 	}
@@ -717,12 +717,13 @@ public class Director : MonoBehaviour
 
 	public void UnitTest()
 	{
-		SetSpeedControlPanel();
+		ActiveAvatars();
+		SetInitSpeed(4.0f);
 	}
 
 	public void UnitTestTwo()
 	{
-		SetRestartInd(10);
+		SetRestartInd(3);
 	}
 
 	public void HeightUp()

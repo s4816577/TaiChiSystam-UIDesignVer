@@ -30,6 +30,7 @@ public class SystemSettingHandler : ButtonHandler
 	{
 		director.SaveInformation("進入系統設定頁面");
 		director.stageCode.Add(4);
+		director.ResetCount();
 		if (director.singleMode)
 			director.singleMode = false;
 		if (director.seriesMode)

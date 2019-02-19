@@ -21,7 +21,7 @@ public class CoachFreezeAtStart : MonoBehaviour {
 		//set init speed
 		anim.speed = 0.0f;
 
-		//get init rotation
-		//initQuaternion = this.transform.rotation;
+		//adjust y
+		this.transform.localPosition = new Vector3(this.transform.localPosition.x, -0.043f, this.transform.localPosition.z);
 	}
 }
