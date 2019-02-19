@@ -69,6 +69,11 @@ public class FileWriter : MonoBehaviour
 		firstSave = true;
 	}
 
+	public void EndOfRecording()
+	{
+		IsRecording = false;
+	}
+
 	void Update()
 	{
 		timeStamp = System.DateTime.Now.ToString();

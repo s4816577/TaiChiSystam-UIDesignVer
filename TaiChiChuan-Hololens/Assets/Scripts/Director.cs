@@ -32,6 +32,7 @@ public class Director : MonoBehaviour
 	public bool seriesMode = false;
 	public bool singleMode = false;
 	private bool showingPause = true;
+	private bool IsRecording = false;
 
 	private FileWriter fileWriter;
 
@@ -86,10 +87,16 @@ public class Director : MonoBehaviour
 						{
 							Invoke("GoToDetailMode", 1f);
 						}
-						else if (count >= 2)
+						else if (count == 2)
 						{
 							CancelInvoke("GoToDetailMode");
-							GoBackMainMenu();
+							Invoke("GoBackMainMenu", 1f);
+						}
+						else if (count >= 3)
+						{
+							CancelInvoke("GoToDetailMode");
+							CancelInvoke("GoBackMainMenu");
+							Play();							
 						}
 					}
 					else if (stageCode[stageCode.Count - 1] == 3)
@@ -123,10 +130,16 @@ public class Director : MonoBehaviour
 						{
 							Invoke("GoToDetailMode", 1f);
 						}
-						else if (count >= 2)
+						else if (count == 2)
 						{
 							CancelInvoke("GoToDetailMode");
-							GoBackSingleMenu();
+							Invoke("GoBackSingleMenu", 1f);
+						}
+						else if (count >= 3)
+						{
+							CancelInvoke("GoToDetailMode");
+							CancelInvoke("GoBackSingleMenu");
+							Play();
 						}
 					}
 					else if (stageCode[stageCode.Count - 1] == 3)
@@ -189,8 +202,16 @@ public class Director : MonoBehaviour
 					}
 					else if (count >= 3)
 					{
-						CancelInvoke("ResetCount");
-						CreateNewFileAndStartRecording();
+						if (!IsRecording)
+						{
+							CancelInvoke("ResetCount");
+							CreateNewFileAndStartRecording();
+						}
+						else
+						{
+							CancelInvoke("ResetCount");
+							StopRecording();
+						}
 					}
 				}
 			}
@@ -296,6 +317,7 @@ public class Director : MonoBehaviour
 			SaveInformation("觸發Play");
 			userInterface.CreateCommandName("Play");
 			playbackState.Play();
+			count = 0;
 		}
     }
 
@@ -713,6 +735,16 @@ public class Director : MonoBehaviour
 		fileWriter.InitRecording();
 		fileWriter.SaveInformationToFile("開始記錄");
 		count = 0;
+		IsRecording = true;
+	}
+
+	public void StopRecording()
+	{
+		userInterface.CreateCommandName("Stop Recording");
+		fileWriter.SaveInformationToFile("結束記錄");
+		fileWriter.EndOfRecording();
+		count = 0;
+		IsRecording = false;
 	}
 
 	public void UnitTest()
