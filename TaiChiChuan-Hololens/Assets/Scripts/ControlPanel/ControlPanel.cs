@@ -38,8 +38,8 @@ public abstract class ControlPanel : MonoBehaviour
 			moveToGaze = true;
 		}
 
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f &&
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 12.0f &&
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -12.0f &&
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 6.0f &&
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -6.0f)
 		{
@@ -48,8 +48,8 @@ public abstract class ControlPanel : MonoBehaviour
 
 		if (moveToGaze)
 		{
-			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.05f);
-			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.05f);
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.03f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.03f);
 		}
 		
 		/*

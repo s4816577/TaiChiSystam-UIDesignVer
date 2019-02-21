@@ -33,6 +33,7 @@ public class Director : MonoBehaviour
 	public bool singleMode = false;
 	private bool showingPause = true;
 	private bool IsRecording = false;
+	private bool IsUsingHelpInSingleMode = false;
 
 	private FileWriter fileWriter;
 
@@ -167,7 +168,7 @@ public class Director : MonoBehaviour
 			else
 			{
 				//add BackToMenu when using 5 and 4
-				if (stageCode[stageCode.Count - 1] == 5 || stageCode[stageCode.Count - 1] == 4 || stageCode[stageCode.Count - 1] == 2)
+				if (stageCode[stageCode.Count - 1] == 5 || stageCode[stageCode.Count - 1] == 4 || (stageCode[stageCode.Count - 1] == 2 && !IsUsingHelpInSingleMode))
 				{
 					count++;
 					if (count == 1)
@@ -328,8 +329,7 @@ public class Director : MonoBehaviour
 		{
 			SaveInformation("觸發Help");
 			userInterface.CreateCommandName("Help");
-			CancelInvoke("GoToDetailMode");
-			SetDescriptionControlPanel();
+			SetHelpControlPanel();
 			count = 0;
 		}
 	}
@@ -553,7 +553,18 @@ public class Director : MonoBehaviour
         if (controlPanel != null)
             UnityEngine.Object.Destroy(controlPanel);
     }
-    public void SetLevel1ControlPanel()
+
+	public void DestroyHelpControlPanel()
+	{
+		SaveInformation("退出幫助頁面");
+		count = 0;
+		if (controlPanel != null)
+			UnityEngine.Object.Destroy(controlPanel);
+		DisableUsingControlPanel();
+		IsUsingHelpInSingleMode = false;
+	}
+
+	public void SetLevel1ControlPanel()
     {
 		IsUsingControlPanel = true;
 		//userInterface.CreateCommandName("Menu");
@@ -613,6 +624,14 @@ public class Director : MonoBehaviour
 		UnActiveAvatars();
 		count = 0;
 		controlPanel = HeightControlPanel.InstantiateGameObject();
+	}
+
+	public void SetHelpControlPanel()
+	{
+		SaveInformation("進入幫助頁面");
+		IsUsingControlPanel = true;
+		IsUsingHelpInSingleMode = true;
+		controlPanel = HelpControlPanel.InstantiateGameObject(stageCode[stageCode.Count - 1]);
 	}
 
 	public void SetMirrorControlPanel()
@@ -767,8 +786,7 @@ public class Director : MonoBehaviour
 
 	public void UnitTest()
 	{
-		ActiveAvatars();
-		SetInitSpeed(4.0f);
+		SetSingleModeControlPanel();
 	}
 
 	public void UnitTestTwo()

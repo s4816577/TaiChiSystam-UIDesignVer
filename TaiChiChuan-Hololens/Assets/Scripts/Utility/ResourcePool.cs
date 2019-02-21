@@ -217,6 +217,11 @@ public class ResourcePool
 		return Resources.Load<GameObject>("Prefabs/HeightControlPanel");
 	}
 
+	public GameObject GetHelpControlPanelPrefab(int stage)
+	{
+		return Resources.Load<GameObject>("Prefabs/HelpControlPanel" + stage.ToString());
+	}
+
 	public GameObject GetMirrorControlPanelPrefab()
     {
         return Resources.Load<GameObject>("Prefabs/MirrorControlPanel");
