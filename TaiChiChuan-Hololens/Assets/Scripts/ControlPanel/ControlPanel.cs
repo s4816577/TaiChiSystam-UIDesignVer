@@ -29,26 +29,49 @@ public abstract class ControlPanel : MonoBehaviour
 		gaze.transform.position = Camera.main.transform.position + DISTANT2CONTROLPANEL * Camera.main.transform.forward;
 		gaze.transform.forward = Camera.main.transform.forward;
 		// Gaze too right, left, up, down
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 15.0f ||
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -15.0f ||
+		
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 18.0f ||
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -18.0f ||
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > 8.0f ||
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < -8.0f)
 		{
 			moveToGaze = true;
 		}
 
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 1.0f &&
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -1.0f &&
-			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 1.0f &&
-			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -1.0f)
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f &&
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 6.0f &&
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -6.0f)
 		{
 			moveToGaze = false;
 		}
 
 		if (moveToGaze)
 		{
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.05f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.05f);
+		}
+		
+		/*
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 18.0f ||
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -18.0f ||
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > 8.0f ||
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < -8.0f)
+		{
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.03f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.03f);
+		}*/
+	}
+	/*
+	void Transfer()
+	{
+		if (!(gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
+			   gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f &&
+			   gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 6.0f &&
+			   gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -6.0f))
+		{
 			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.1f);
 			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.1f);
 		}
-	}
+	}*/
 }

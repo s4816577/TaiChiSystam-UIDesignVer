@@ -321,7 +321,19 @@ public class Director : MonoBehaviour
 		}
     }
 
-    public void Pause()
+	public void Hint()
+	{
+		if (!IsUsingControlPanel)
+		{
+			SaveInformation("觸發Hint");
+			userInterface.CreateCommandName("Hint");
+			CancelInvoke("GoToDetailMode");
+			SetDescriptionControlPanel();
+			count = 0;
+		}
+	}
+
+	public void Pause()
     {
 		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
 		{
@@ -682,10 +694,10 @@ public class Director : MonoBehaviour
 	{
 		SaveInformation("回到單招招式選擇頁面");
 		NotShowingPauseLog();
+		Pause();
 		//no need to pop
 		//stageCode.RemoveAt(stageCode.Count - 1);
 		SetSingleModeControlPanel();
-		Pause();
 		count = 0;
 	}
 
