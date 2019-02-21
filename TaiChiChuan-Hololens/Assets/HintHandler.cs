@@ -16,11 +16,11 @@ public class HintHandler : MonoBehaviour, HoloToolkit.Unity.InputModule.IInputCl
 
 	public virtual void OnInputClicked(InputClickedEventData eventData)
 	{
-		director.Hint();
+		//director.Help();
 	}
 
 	void Update()
-	{
+	{/*
 		if (director.stageCode[director.stageCode.Count - 1] == 1 || (director.stageCode[director.stageCode.Count - 1] == 2 && !director.IsUsingControlPanel) || director.stageCode[director.stageCode.Count - 1] == 3)
 		{
 			MeshRenderer[] renderers = this.transform.GetComponentsInChildren<MeshRenderer>();
@@ -32,6 +32,6 @@ public class HintHandler : MonoBehaviour, HoloToolkit.Unity.InputModule.IInputCl
 			MeshRenderer[] renderers = this.transform.GetComponentsInChildren<MeshRenderer>();
 			foreach (MeshRenderer renderer in renderers)
 				renderer.enabled = false;
-		}
+		}*/
 	}
 }

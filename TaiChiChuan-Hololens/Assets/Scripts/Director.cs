@@ -321,12 +321,13 @@ public class Director : MonoBehaviour
 		}
     }
 
-	public void Hint()
+	//It's equal to Hint
+	public void Help()
 	{
 		if (!IsUsingControlPanel)
 		{
-			SaveInformation("觸發Hint");
-			userInterface.CreateCommandName("Hint");
+			SaveInformation("觸發Help");
+			userInterface.CreateCommandName("Help");
 			CancelInvoke("GoToDetailMode");
 			SetDescriptionControlPanel();
 			count = 0;
@@ -338,10 +339,14 @@ public class Director : MonoBehaviour
 		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
 		{
 			if (showingPause)
+			{
 				SaveInformation("觸發Pause");
+				userInterface.CreateCommandName("Pause");
+			}
 			else
+			{
 				showingPause = true;
-			userInterface.CreateCommandName("Pause");
+			}
 			playbackState.Pause();
 		}
     }
@@ -672,6 +677,7 @@ public class Director : MonoBehaviour
 		SaveInformation("進入分解模式");
 		NotShowingPauseLog();
 		Pause();
+		userInterface.CreateCommandName("Segmented Mode");
 		stageCode.Add(3);
 		count = 0;
 	}
