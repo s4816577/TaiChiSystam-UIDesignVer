@@ -62,7 +62,7 @@ public class StageMode : MonoBehaviour {
 		//show MovementName and ActionName in Practicing 
 		if (director.seriesMode || director.singleMode)
 		{
-			if (director.stageCode[director.stageCode.Count - 1] == 1 || (director.stageCode[director.stageCode.Count - 1] == 2 && !director.IsUsingControlPanel))
+			if (director.stageCode[director.stageCode.Count - 1] == 1 || (director.stageCode[director.stageCode.Count - 1] == 2 && !director.IsUsingControlPanel) || (director.stageCode[director.stageCode.Count - 1] == 2 && director.IsUsingHelpInSingleMode))
 			{
 				stageTextMesh.text += "\n" + "招式名稱：" + MovementName;
 			}

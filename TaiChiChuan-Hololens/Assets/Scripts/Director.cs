@@ -33,7 +33,7 @@ public class Director : MonoBehaviour
 	public bool singleMode = false;
 	private bool showingPause = true;
 	private bool IsRecording = false;
-	private bool IsUsingHelpInSingleMode = false;
+	public bool IsUsingHelpInSingleMode = false;
 
 	private FileWriter fileWriter;
 
@@ -786,12 +786,13 @@ public class Director : MonoBehaviour
 
 	public void UnitTest()
 	{
-		SetSingleModeControlPanel();
+		ActiveAvatars();
+		SetRestartInd(3);
 	}
 
 	public void UnitTestTwo()
 	{
-		SetRestartInd(3);
+		Help();
 	}
 
 	public void HeightUp()
