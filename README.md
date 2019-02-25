@@ -7,7 +7,7 @@ Select Release/x86/Device when building to advoid lag
 6.cursor over效果
 9.進入單招模式、套路模式、單招動作、分解動作 都要語音
 12.menu的移動演算法修正
-#Finish
+# Finish
 0.Log功能
 2.十字手最後會接到t pose
 3.套路模式和單招模式下一招和上一招 要快轉
