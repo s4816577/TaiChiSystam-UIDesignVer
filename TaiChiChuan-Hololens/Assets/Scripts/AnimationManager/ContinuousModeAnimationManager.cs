@@ -9,7 +9,7 @@ public class ContinuousModeAnimationManager : AnimationManager
     {
 	}
 
-    protected override void UpdateAndCheckIndex()
+    public override void UpdateAndCheckIndex()
     {
         int lastMovementInd = base.currentMovementInd;
         base.UpdateAndCheckIndex();
@@ -44,4 +44,14 @@ public class ContinuousModeAnimationManager : AnimationManager
     {
         // Do nothing.
     }
+
+	public override void PlaySegmentedSound()
+	{
+		//Do nothing
+	}
+
+	public override void ClearAudio()
+	{
+		//Do nothing
+	}
 }

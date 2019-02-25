@@ -27,7 +27,7 @@ public class Director : MonoBehaviour
 	public float LastAvatarsHeight = -0.34f;
 	public bool IsUsingControlPanel = true;
 
-	public string[] stage = {"楊氏太極拳", "套路模式", "單招模式", "分解動作", "系統設定", "指令說明", "調整高度", "調整速度"};
+	public string[] stage = {"楊氏太極拳", "套路模式", "單招模式", "分解動作", "系統設定", "指令說明", "調整高度", "調整速度", "單招動作"};
 	public List<int> stageCode;
 	public bool seriesMode = false;
 	public bool singleMode = false;
@@ -86,21 +86,21 @@ public class Director : MonoBehaviour
 
 						if (count == 1)
 						{
-							Invoke("GoToDetailMode", 1f);
+							Invoke("GoToDetailSingleMode", 1f);
 						}
 						else if (count == 2)
 						{
-							CancelInvoke("GoToDetailMode");
+							CancelInvoke("GoToDetailSingleMode");
 							Invoke("GoBackMainMenu", 1f);
 						}
 						else if (count >= 3)
 						{
-							CancelInvoke("GoToDetailMode");
+							CancelInvoke("GoToDetailSingleMode");
 							CancelInvoke("GoBackMainMenu");
 							Play();							
 						}
 					}
-					else if (stageCode[stageCode.Count - 1] == 3)
+					else if (stageCode[stageCode.Count - 1] == 8)
 					{
 						count++;
 
@@ -313,7 +313,7 @@ public class Director : MonoBehaviour
     // For speech input handler.
     public void Play()
     {
-		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3 && stageCode[stageCode.Count - 1] != 8)
 		{
 			SaveInformation("觸發Play");
 			userInterface.CreateCommandName("Play");
@@ -336,7 +336,7 @@ public class Director : MonoBehaviour
 
 	public void Pause()
     {
-		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3)
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3 && stageCode[stageCode.Count - 1] != 8)
 		{
 			if (showingPause)
 			{
@@ -648,7 +648,7 @@ public class Director : MonoBehaviour
 
 	public void SetRestartInd(int Ind)
 	{
-		if (stageCode[stageCode.Count - 1] != 1)
+		if (stageCode[stageCode.Count - 1] == 2)
 		{
 			SaveInformation("選擇第" + Ind.ToString() + "招，並進入單招模式");
 		}
@@ -677,7 +677,7 @@ public class Director : MonoBehaviour
 		NotShowingPauseLog();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		Pause();
-		//SetRestartInd(0);
+		playbackState.SetRestartInd(0);
 		count = 0;
 	}
 
@@ -687,17 +687,27 @@ public class Director : MonoBehaviour
 		NotShowingPauseLog();
 		stageCode.RemoveAt(stageCode.Count - 1);
 		Pause();
-		//SetRestartInd(animationManager.restartInd);
+		playbackState.SetRestartInd(animationManager.restartInd);
 		count = 0;
 	}
 
 	private void GoToDetailMode()
 	{
-		SaveInformation("進入分解模式");
+		SaveInformation("進入分解動作");
 		NotShowingPauseLog();
 		Pause();
-		userInterface.CreateCommandName("Segmented Mode");
+		//userInterface.CreateCommandName("Segmented Mode");
 		stageCode.Add(3);
+		count = 0;
+	}
+
+	private void GoToDetailSingleMode()
+	{
+		SaveInformation("進入單招動作");
+		NotShowingPauseLog();
+		Pause();
+		//userInterface.CreateCommandName("Segmented Mode");
+		stageCode.Add(8);
 		count = 0;
 	}
 
@@ -787,12 +797,12 @@ public class Director : MonoBehaviour
 	public void UnitTest()
 	{
 		ActiveAvatars();
-		SetRestartInd(3);
+		SetRestartInd(14);
 	}
 
 	public void UnitTestTwo()
 	{
-		Help();
+		GoBackSeriesMode();
 	}
 
 	public void HeightUp()

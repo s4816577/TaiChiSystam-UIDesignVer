@@ -1031,9 +1031,11 @@ MonoBehaviour:
   - "\u6307\u4EE4\u8AAA\u660E"
   - "\u8ABF\u6574\u9AD8\u5EA6"
   - "\u8ABF\u6574\u901F\u5EA6"
+  - "\u55AE\u62DB\u52D5\u4F5C"
   stageCode: 
   seriesMode: 0
   singleMode: 0
+  IsUsingHelpInSingleMode: 0
 --- !u!1 &1203458987
 GameObject:
   m_ObjectHideFlags: 0

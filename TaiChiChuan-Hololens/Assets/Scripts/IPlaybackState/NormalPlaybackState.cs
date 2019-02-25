@@ -31,6 +31,7 @@ public class NormalPlaybackState : IPlaybackState
         animationManager.PlaySound();
         animationManager.SetSpeed(animationManager.LastSpeed);
         animationManager.shouldPlaying = true;
+		animationManager.ClickPlaying = true;
 
         // Show "Play" icon on UI.
         animationManager.AnimationDelegator.InvokePlayIcon(true);
@@ -43,6 +44,8 @@ public class NormalPlaybackState : IPlaybackState
     {
         animationManager.SetSpeed(0.0f);
         animationManager.shouldPlaying = false;
+		animationManager.ClickPlaying = false;
+		animationManager.ClearAudio();
 
         // Show "Pause" icon on UI.
         animationManager.AnimationDelegator.InvokePlayIcon(false);

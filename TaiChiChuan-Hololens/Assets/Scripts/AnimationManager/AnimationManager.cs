@@ -8,28 +8,31 @@ abstract public class AnimationManager
     private const float DEFAULT_SPEED = 1.0f;
 
     // Taichi movement & action.
-    protected List<TaichiMovement> taichiMovementArray;
+    public List<TaichiMovement> taichiMovementArray;
     private int lastMovementInd;
-    protected int currentMovementInd;
+    public int currentMovementInd;
     private int lastActionInd;
-    protected int currentActionInd;
+    public int currentActionInd;
 	public int restartInd = 3;
 	private bool LastActionPause = true;
+	private bool LastMovementPause = true;
 	private StageMode stageMode;
 
 	protected AvatarsController avatarsController;
 	protected Director director;
     private List<Animator> animators = new List<Animator>();
-    protected AudioSource audioSource;
+    public AudioSource audioSource;
 
     // Delagates.
     private AnimationDelegator animationDelegator;
     public AnimationDelegator AnimationDelegator { get { return animationDelegator; } }
 
-    // TODO Playback State.
-    // protected IPlaybackState playbackState;
-    // TODO
+	// TODO Playback State.
+	// protected IPlaybackState playbackState;
+	// TODO
+	public bool IsSkippingByNextLast = false;
     public bool shouldPlaying = false;
+	public bool ClickPlaying = false;
     protected float speed;
     protected float lastSpeed = DEFAULT_SPEED;
     public float LastSpeed
@@ -93,7 +96,7 @@ abstract public class AnimationManager
         currentTime = animatorState.normalizedTime;
     }
 
-    protected virtual void UpdateAndCheckIndex()
+    public virtual void UpdateAndCheckIndex()
     {
         UpdateMovement();
         UpdateAction();
@@ -130,22 +133,57 @@ abstract public class AnimationManager
 
         lastActionInd = -1;
         currentActionInd = 0;
-
-
+		
 		// Check Movement name changed.
 		if (lastMovementInd != currentMovementInd)
-        {	
-			if (currentMovementInd != restartInd && director.singleMode)
+        {
+			if (currentMovementInd != restartInd && director.singleMode && !IsSkippingByNextLast)
 			{
 				currentMovementInd = restartInd;
 				ExecuteRestart();
+				if (ClickPlaying)
+					ClickPlaying = false;
 			}
             lastMovementInd = currentMovementInd;
             currentMovement = taichiMovementArray[currentMovementInd];
             //animationDelegator.InvokeMovementChange(currentMovement.MovementNumber.ToString() + ". " + currentMovement.MovementName);
 			stageMode.MovementName = currentMovement.MovementName;
+			if (IsSkippingByNextLast)
+			{
+				restartInd = currentMovementInd;
+				IsSkippingByNextLast = false;
+			}
         }
-    }
+
+		//remove t pose at the end
+		if (currentTime >= taichiMovementArray[15].NormalizedEndTime)
+		{
+			if (director.stageCode[director.stageCode.Count - 1] == 1)
+			{
+				currentMovementInd = 0;
+				restartInd = 0;
+				ExecuteRestart();
+				if (ClickPlaying)
+					ClickPlaying = false;
+				lastMovementInd = currentMovementInd;
+				currentMovement = taichiMovementArray[currentMovementInd];
+				//animationDelegator.InvokeMovementChange(currentMovement.MovementNumber.ToString() + ". " + currentMovement.MovementName);
+				stageMode.MovementName = currentMovement.MovementName;
+			}
+			else if (director.stageCode[director.stageCode.Count - 1] == 2)
+			{
+				restartInd = 15;
+				currentMovementInd = restartInd;
+				ExecuteRestart();
+				if (ClickPlaying)
+					ClickPlaying = false;
+				lastMovementInd = currentMovementInd;
+				currentMovement = taichiMovementArray[currentMovementInd];
+				//animationDelegator.InvokeMovementChange(currentMovement.MovementNumber.ToString() + ". " + currentMovement.MovementName);
+				stageMode.MovementName = currentMovement.MovementName;
+			}
+		}
+	}
 
     private void UpdateAction()
     {
@@ -235,6 +273,7 @@ abstract public class AnimationManager
 		director.NotShowingPauseLog();
 		director.Pause();
 		avatarsController.ResetAvatersPosition(restartInd);
+		ClearAudio();
 	}
 
     public void ExecuteNextMovement()
@@ -245,16 +284,39 @@ abstract public class AnimationManager
             TaichiMovement newMovement = taichiMovementArray[newMovementInd];
             director.SetPlaybackState(new FastforwardPlayback(director, this, newMovement.NormalizedBeginTime));
         }
-    }
+		else if (currentMovementInd + 1 == taichiMovementArray.Count)
+		{
+			if (LastMovementPause)
+			{
+				int newMovementInd = 15;
+				TaichiMovement newMovement = taichiMovementArray[newMovementInd];
+				director.SetPlaybackState(new FastforwardPlayback(director, this, newMovement.NormalizedEndTime - 0.0001f));
+				LastMovementPause = false;
+			}
+			else
+			{
+				currentMovementInd = 0;
+				restartInd = 0;
+				ExecuteRestart();
+				LastMovementPause = true;
+			}
+		}
+	}
 
     public void ExecuteLastMovement()
     {
-        if (currentMovementInd != 0)
-        {
-            int newMovementInd = currentMovementInd - 1;
-            TaichiMovement newMovement = taichiMovementArray[newMovementInd];
-            director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
-        }
+		if (currentMovementInd != 0)
+		{
+			int newMovementInd = currentMovementInd - 1;
+			TaichiMovement newMovement = taichiMovementArray[newMovementInd];
+			director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
+		}
+		else if (currentMovementInd == 0)
+		{
+			int newMovementInd = 0;
+			TaichiMovement newMovement = taichiMovementArray[newMovementInd];
+			director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
+		}
     }
 
 	public virtual void ExecuteNextAction()
@@ -285,18 +347,35 @@ abstract public class AnimationManager
 			}
 			else if (currentActionInd + 1 == taichiMovementArray[currentMovementInd].TaichiActionArray.Count)
 			{
-				//SetSpeed(1.0f);
-				if (LastActionPause)
+				if (currentMovementInd == 15)
 				{
-					int newActionInd = 0;
-					TaichiAction newAction = taichiMovementArray[currentMovementInd + 1].TaichiActionArray[newActionInd];
-					director.SetPlaybackState(new FastforwardPlayback(director, this, newAction.NormalizedBeginTime - 0.0001f));
-					LastActionPause = false;
+					//SetSpeed(1.0f);
+					if (LastActionPause)
+					{
+						director.SetPlaybackState(new FastforwardPlayback(director, this, taichiMovementArray[15].NormalizedEndTime - 0.0001f));
+						LastActionPause = false;
+					}
+					else
+					{
+						ExecuteRestart();
+						LastActionPause = true;
+					}
 				}
 				else
 				{
-					ExecuteRestart();
-					LastActionPause = true;
+					//SetSpeed(1.0f);
+					if (LastActionPause)
+					{
+						int newActionInd = 0;
+						TaichiAction newAction = taichiMovementArray[currentMovementInd + 1].TaichiActionArray[newActionInd];
+						director.SetPlaybackState(new FastforwardPlayback(director, this, newAction.NormalizedBeginTime - 0.0001f));
+						LastActionPause = false;
+					}
+					else
+					{
+						ExecuteRestart();
+						LastActionPause = true;
+					}
 				}
 			}
 		}
@@ -330,7 +409,11 @@ abstract public class AnimationManager
 
     public abstract void ExecuteLast();
 
-    public void UpdateFirstCoachAnamator(Animator firstCoachAnimator)
+	public abstract void PlaySegmentedSound();
+
+	public abstract void ClearAudio();
+
+	public void UpdateFirstCoachAnamator(Animator firstCoachAnimator)
     {
         animators[0] = firstCoachAnimator;
         animators[0].speed = speed;

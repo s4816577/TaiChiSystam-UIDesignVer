@@ -11,14 +11,34 @@ public class FastforwardPlayback : IPlaybackState
     private const float SKIPPED_SPEED = 1.0f;
     private float targetTime;
 
-    public FastforwardPlayback(Director director, AnimationManager animationManager, float targetTime)
+	private Queue<AudioClip> audioQueue = new Queue<AudioClip>();
+
+	public FastforwardPlayback(Director director, AnimationManager animationManager, float targetTime)
     {
         this.director = director;
         this.animationManager = animationManager;
         this.targetTime = targetTime;
 
-        animationManager.SetSpeed(/*SKIPPED_SPEED*/animationManager.LastSpeed);
-    }
+		//set speed in different mode
+		float SetSpeed;
+		if (director.stageCode[director.stageCode.Count - 1] == 1 || director.stageCode[director.stageCode.Count - 1] == 2)
+			SetSpeed = 8.0f;
+		else
+			SetSpeed = animationManager.LastSpeed;
+
+		animationManager.SetSpeed(/*SKIPPED_SPEED*/SetSpeed);
+
+		//set skip loop in mode 2
+		if (director.stageCode[director.stageCode.Count - 1] == 2)
+		{
+			animationManager.IsSkippingByNextLast = true;
+		}
+
+		if (director.stageCode[director.stageCode.Count - 1] == 8)
+			animationManager.PlaySound();
+		else if (director.stageCode[director.stageCode.Count - 1] == 3)
+			animationManager.PlaySegmentedSound();
+	}
 
     public void Update()
     {
@@ -28,8 +48,8 @@ public class FastforwardPlayback : IPlaybackState
             animationManager.SetAnimationTime(targetTime);
             animationManager.CurrentTime = targetTime;
             director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
-        }
-    }
+        } 
+	}
 
     public void Play()
     {
@@ -63,8 +83,11 @@ public class FastforwardPlayback : IPlaybackState
 
     public void Last()
     {
+		animationManager.ExecuteLast();
 
-    }
+		// Show "Pause" icon on UI.
+		animationManager.AnimationDelegator.InvokePlayIcon(false);
+	}
 
     public void NextMovement()
     {
@@ -88,12 +111,18 @@ public class FastforwardPlayback : IPlaybackState
 
     public bool CanPlayActionAudio()
     {
-        return false;
-    }
+		if (director.stageCode[director.stageCode.Count - 1] == 1 || director.stageCode[director.stageCode.Count - 1] == 2)
+			return false;
+		else
+			return true;
+	}
 
 	public void SetRestartInd(int Ind)
 	{
-		//Do nothing
+		animationManager.SetReatartInd(Ind);
+		animationManager.ExecuteRestart();
+		animationManager.AnimationDelegator.InvokePlayIcon(false);
+		director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
 	}
 }
 

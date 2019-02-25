@@ -17,10 +17,27 @@ public class RewindPlaybackState : IPlaybackState
         this.animationManager = animationManager;
         this.targetTime = targetTime;
 
-        animationManager.SetSpeed(/*SKIPPED_SPEED*/animationManager.LastSpeed);
+		//set speed in different mode
+		float SetSpeed;
+		if (director.stageCode[director.stageCode.Count - 1] == 1 || director.stageCode[director.stageCode.Count - 1] == 2)
+			SetSpeed = 8.0f;
+		else
+			SetSpeed = animationManager.LastSpeed;
 
-        animationManager.SetAnimationDirection(-1.0f);
-    }
+		animationManager.SetSpeed(/*SKIPPED_SPEED*/SetSpeed);
+
+		//set skip loop in mode 2
+		if (director.stageCode[director.stageCode.Count - 1] == 2)
+		{
+			animationManager.IsSkippingByNextLast = true;
+		}
+
+		animationManager.SetAnimationDirection(-1.0f);
+		if (director.stageCode[director.stageCode.Count - 1] == 8)
+			animationManager.PlaySound();
+		else if (director.stageCode[director.stageCode.Count - 1] == 3)
+			animationManager.PlaySegmentedSound();
+	}
 
     public void Update()
     {
@@ -31,7 +48,7 @@ public class RewindPlaybackState : IPlaybackState
             animationManager.SetAnimationTime(targetTime);
             animationManager.CurrentTime = targetTime;
             director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
-        }
+		}
     }
 
     public void Play()
@@ -61,8 +78,11 @@ public class RewindPlaybackState : IPlaybackState
 
     public void Next()
     {
-        // Do nothing.
-    }
+		animationManager.ExecuteNext();
+
+		// Show "Pause" icon on UI.
+		animationManager.AnimationDelegator.InvokePlayIcon(false);
+	}
 
     public void Last()
     {
@@ -91,12 +111,18 @@ public class RewindPlaybackState : IPlaybackState
 
     public bool CanPlayActionAudio()
     {
-        return false;
+		if (director.stageCode[director.stageCode.Count - 1] == 1 || director.stageCode[director.stageCode.Count - 1] == 2)
+			return false;
+		else
+			return true;
     }
 
 	public void SetRestartInd(int Ind)
 	{
-		//Do nothing
+		animationManager.SetReatartInd(Ind);
+		animationManager.ExecuteRestart();
+		animationManager.AnimationDelegator.InvokePlayIcon(false);
+		director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
 	}
 }
 

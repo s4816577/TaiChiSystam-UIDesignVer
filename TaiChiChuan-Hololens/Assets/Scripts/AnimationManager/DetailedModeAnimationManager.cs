@@ -38,42 +38,122 @@ public class DetailedModeAnimationManager : AnimationManager
     {
     }
 
-    protected override void UpdateAndCheckIndex()
+    public override void UpdateAndCheckIndex()
     {
         int lastMovementInd = base.currentMovementInd;
         int lastActionInd = base.currentActionInd;
         bool canPlayActionAudio = base.director.PlaybackState.CanPlayActionAudio();
         base.UpdateAndCheckIndex();
 
-		if (base.director.stageCode[base.director.stageCode.Count - 1] != 3)
-			canPlayActionAudio = false;
+		/*if (base.director.stageCode[base.director.stageCode.Count - 1] != 3)
+			canPlayActionAudio = false;*/
+		if (director.stageCode[director.stageCode.Count - 1] == 8)
+		{
+			if (lastMovementInd != base.currentMovementInd)
+			{
+				// Movement audio.
+				//audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].Sound);
+				// Action audio.
+				//if (canPlayActionAudio)
+				//	audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[base.currentActionInd].Sound);
+			}
+			else if (lastActionInd != base.currentActionInd)
+			{
+				// Action audio.
+				if (canPlayActionAudio)
+					audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[currentActionInd].Sound);
+			}
 
-        if (lastMovementInd != base.currentMovementInd)
-        {
-            // Movement audio.
-            audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].Sound);
-            // Action audio.
-            if (canPlayActionAudio)
-                audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[base.currentActionInd].Sound);
-        }
-        else if (lastActionInd != base.currentActionInd)
-        {
-            // Action audio.
-            if (canPlayActionAudio)
-                audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[currentActionInd].Sound);
-        }
+			// If no audio is playing and we still have audio in queue.
+			if (!audioSource.isPlaying && audioQueue.Count != 0)
+			{
+				audioSource.PlayOneShot(audioQueue.Dequeue());
+				//IsAudioPlaying = true;
+			}
+			// If the audioSource just stop playing audio.
+			else if (!audioSource.isPlaying && IsAudioPlaying)
+			{
+				//IsAudioPlaying = false;
+			}
+		}
+		else if (director.stageCode[director.stageCode.Count - 1] == 1)
+		{
+			if (base.ClickPlaying)
+			{
+				if (lastMovementInd != base.currentMovementInd)
+				{
+					// Movement audio.
+					audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].Sound);
+					// Action audio.
+					if (canPlayActionAudio)
+						audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[base.currentActionInd].Sound);
+				}
+				else if (lastActionInd != base.currentActionInd)
+				{
+					// Action audio.
+				if (canPlayActionAudio)
+					audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[currentActionInd].Sound);
+				}
 
-        // If no audio is playing and we still have audio in queue.
-        if (!audioSource.isPlaying && audioQueue.Count != 0)
-        {
-            audioSource.PlayOneShot(audioQueue.Dequeue());
-            IsAudioPlaying = true;
-        }
-        // If the audioSource just stop playing audio.
-        else if (!audioSource.isPlaying && IsAudioPlaying)
-        {
-            IsAudioPlaying = false;
-        }
+				// If no audio is playing and we still have audio in queue.
+				if (!audioSource.isPlaying && audioQueue.Count != 0)
+				{
+					audioSource.PlayOneShot(audioQueue.Dequeue());
+					//IsAudioPlaying = true;
+				}
+				// If the audioSource just stop playing audio.
+				else if (!audioSource.isPlaying && IsAudioPlaying)
+				{
+					//IsAudioPlaying = false;
+				}
+			}
+		}
+		else if (director.stageCode[director.stageCode.Count - 1] == 2)
+		{
+			if (base.ClickPlaying)
+			{
+				if (lastMovementInd != base.currentMovementInd)
+				{
+					// Movement audio.
+					//audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].Sound);
+					// Action audio.
+					//if (canPlayActionAudio)
+					//	audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[base.currentActionInd].Sound);
+				}
+				else if (lastActionInd != base.currentActionInd)
+				{
+					// Action audio.
+					if (canPlayActionAudio)
+						audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[currentActionInd].Sound);
+				}
+
+				if (!audioSource.isPlaying && audioQueue.Count != 0)
+				{
+					audioSource.PlayOneShot(audioQueue.Dequeue());
+					//IsAudioPlaying = true;
+				}
+				// If the audioSource just stop playing audio.
+				else if (!audioSource.isPlaying && IsAudioPlaying)
+				{
+					//IsAudioPlaying = false;
+				}
+			}
+		}
+		else
+		{
+
+			//Do nothing
+			if (!audioSource.isPlaying && audioQueue.Count != 0)
+			{
+				audioSource.PlayOneShot(audioQueue.Dequeue());
+				//IsAudioPlaying = true;
+			}
+			// If the audioSource just stop playing audio.
+			else if (!audioSource.isPlaying && IsAudioPlaying)
+			{
+				//IsAudioPlaying = false;
+			}
+		}
     }
 
     public override void PlaySound()
@@ -98,5 +178,19 @@ public class DetailedModeAnimationManager : AnimationManager
 			base.ExecuteLastAction();
 		else
 			base.ExecuteLastMovement();
+	}
+
+	public override void PlaySegmentedSound()
+	{
+		// Movement audio.
+		if (currentActionInd == 0)
+			audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].Sound);
+		// Action audio.
+		audioQueue.Enqueue(taichiMovementArray[base.currentMovementInd].TaichiActionArray[base.currentActionInd].Sound);
+	}
+
+	public override void ClearAudio()
+	{
+		audioQueue.Clear();
 	}
 }
