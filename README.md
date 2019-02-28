@@ -8,7 +8,6 @@ Select Release/x86/Device when building to advoid lag
 3.menu的移動演算法修正  
 4.時鐘調小  
 5.在指令說明中，更改(或加入)freeze、reset、help的敘述  
-6.Log功能修正
 # To Do But Difficult
 1.套路模式和單招模式中指令說明按鈕  
 2.壓力鞋墊加入  
@@ -27,4 +26,6 @@ Select Release/x86/Device when building to advoid lag
 10.Stop提示字改成Stop  
 11.語音改成"第X招XXXX XXXXX"  
 12.教練方向修正回12點開始  
+13.Log功能修正  
+
 
