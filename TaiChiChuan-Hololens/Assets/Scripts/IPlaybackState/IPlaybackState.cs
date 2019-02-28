@@ -31,4 +31,6 @@ public interface IPlaybackState
 	void SetRestartInd(int Ind);
 
     bool CanPlayActionAudio();
+
+	void PlayAndSound(int Ind);
 }

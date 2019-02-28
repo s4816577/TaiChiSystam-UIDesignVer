@@ -11,7 +11,7 @@ abstract public class AnimationManager
     public List<TaichiMovement> taichiMovementArray;
     private int lastMovementInd;
     public int currentMovementInd;
-    private int lastActionInd;
+    public int lastActionInd;
     public int currentActionInd;
 	public int restartInd = 3;
 	private bool LastActionPause = true;
@@ -20,7 +20,7 @@ abstract public class AnimationManager
 
 	protected AvatarsController avatarsController;
 	protected Director director;
-    private List<Animator> animators = new List<Animator>();
+    public List<Animator> animators = new List<Animator>();
     public AudioSource audioSource;
 
     // Delagates.
@@ -31,7 +31,9 @@ abstract public class AnimationManager
 	// protected IPlaybackState playbackState;
 	// TODO
 	public bool IsSkippingByNextLast = false;
-    public bool shouldPlaying = false;
+	public bool PlayAfterLast = false;
+	public bool LockDuplicate = false;
+	public bool shouldPlaying = false;
 	public bool ClickPlaying = false;
     protected float speed;
     protected float lastSpeed = DEFAULT_SPEED;
@@ -141,8 +143,9 @@ abstract public class AnimationManager
 			{
 				currentMovementInd = restartInd;
 				ExecuteRestart();
-				if (ClickPlaying)
-					ClickPlaying = false;
+				SetSpeed(LastSpeed);
+				shouldPlaying = true;
+				ClickPlaying = true;
 			}
             lastMovementInd = currentMovementInd;
             currentMovement = taichiMovementArray[currentMovementInd];
@@ -163,8 +166,8 @@ abstract public class AnimationManager
 				currentMovementInd = 0;
 				restartInd = 0;
 				ExecuteRestart();
-				if (ClickPlaying)
-					ClickPlaying = false;
+				shouldPlaying = true;
+				ClickPlaying = true;
 				lastMovementInd = currentMovementInd;
 				currentMovement = taichiMovementArray[currentMovementInd];
 				//animationDelegator.InvokeMovementChange(currentMovement.MovementNumber.ToString() + ". " + currentMovement.MovementName);
@@ -175,14 +178,16 @@ abstract public class AnimationManager
 				restartInd = 15;
 				currentMovementInd = restartInd;
 				ExecuteRestart();
-				if (ClickPlaying)
-					ClickPlaying = false;
+				shouldPlaying = true;
+				ClickPlaying = true;
 				lastMovementInd = currentMovementInd;
 				currentMovement = taichiMovementArray[currentMovementInd];
 				//animationDelegator.InvokeMovementChange(currentMovement.MovementNumber.ToString() + ". " + currentMovement.MovementName);
 				stageMode.MovementName = currentMovement.MovementName;
 			}
 		}
+
+		//Debug.Log(currentMovementInd);
 	}
 
     private void UpdateAction()
@@ -263,7 +268,8 @@ abstract public class AnimationManager
         lastSpeed = speed;
     }
 
-    public void ExecuteRestart()
+
+	public void ExecuteRestart()
     {
         foreach (Animator anim in animators)
         {
@@ -318,6 +324,22 @@ abstract public class AnimationManager
 			director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
 		}
     }
+
+	public void ReplayToCurrentMovementStart()
+	{
+		if (currentMovementInd != 0)
+		{
+			int newMovementInd = currentMovementInd;
+			TaichiMovement newMovement = taichiMovementArray[newMovementInd];
+			director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
+		}
+		else if (currentMovementInd == 0)
+		{
+			int newMovementInd = 0;
+			TaichiMovement newMovement = taichiMovementArray[newMovementInd];
+			director.SetPlaybackState(new RewindPlaybackState(director, this, newMovement.NormalizedBeginTime));
+		}
+	}
 
 	public virtual void ExecuteNextAction()
 	{
@@ -424,4 +446,8 @@ abstract public class AnimationManager
 	{
 		restartInd = Ind;
 	}
+
+	public abstract void PlaySoundInd(int Ind);
+
+	public abstract void Replay();
 }

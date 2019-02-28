@@ -32,10 +32,15 @@ public class RewindPlaybackState : IPlaybackState
 			animationManager.IsSkippingByNextLast = true;
 		}
 
+		if (director.stageCode[director.stageCode.Count - 1] == 1)
+		{
+			animationManager.ClearAudio();
+			animationManager.ClickPlaying = false;
+		}
+
 		animationManager.SetAnimationDirection(-1.0f);
-		if (director.stageCode[director.stageCode.Count - 1] == 8)
-			animationManager.PlaySound();
-		else if (director.stageCode[director.stageCode.Count - 1] == 3)
+		
+		if (director.stageCode[director.stageCode.Count - 1] == 3)
 			animationManager.PlaySegmentedSound();
 	}
 
@@ -48,6 +53,11 @@ public class RewindPlaybackState : IPlaybackState
             animationManager.SetAnimationTime(targetTime);
             animationManager.CurrentTime = targetTime;
             director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
+			if (animationManager.PlayAfterLast)
+			{
+				animationManager.PlayAfterLast = false;
+				director.Play();
+			}
 		}
     }
 
@@ -77,11 +87,11 @@ public class RewindPlaybackState : IPlaybackState
     }
 
     public void Next()
-    {
+    {	/*
 		animationManager.ExecuteNext();
 
 		// Show "Pause" icon on UI.
-		animationManager.AnimationDelegator.InvokePlayIcon(false);
+		animationManager.AnimationDelegator.InvokePlayIcon(false);*/
 	}
 
     public void Last()
@@ -123,6 +133,16 @@ public class RewindPlaybackState : IPlaybackState
 		animationManager.ExecuteRestart();
 		animationManager.AnimationDelegator.InvokePlayIcon(false);
 		director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
+		animationManager.SetAnimationDirection(1.0f);
+	}
+
+	public void PlayAndSound(int Ind)
+	{
+		/*
+		animationManager.PlaySound();
+		animationManager.SetSpeed(animationManager.LastSpeed);
+		animationManager.shouldPlaying = true;
+		animationManager.ClickPlaying = true;*/
 	}
 }
 

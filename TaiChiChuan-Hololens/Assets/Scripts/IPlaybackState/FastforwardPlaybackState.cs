@@ -34,9 +34,14 @@ public class FastforwardPlayback : IPlaybackState
 			animationManager.IsSkippingByNextLast = true;
 		}
 
-		if (director.stageCode[director.stageCode.Count - 1] == 8)
-			animationManager.PlaySound();
-		else if (director.stageCode[director.stageCode.Count - 1] == 3)
+		if (director.stageCode[director.stageCode.Count - 1] == 1)
+		{
+			animationManager.ClearAudio();
+			animationManager.ClickPlaying = false;
+		}
+
+
+		if (director.stageCode[director.stageCode.Count - 1] == 3)
 			animationManager.PlaySegmentedSound();
 	}
 
@@ -83,10 +88,11 @@ public class FastforwardPlayback : IPlaybackState
 
     public void Last()
     {
+		/*
 		animationManager.ExecuteLast();
 
 		// Show "Pause" icon on UI.
-		animationManager.AnimationDelegator.InvokePlayIcon(false);
+		animationManager.AnimationDelegator.InvokePlayIcon(false);*/
 	}
 
     public void NextMovement()
@@ -123,6 +129,14 @@ public class FastforwardPlayback : IPlaybackState
 		animationManager.ExecuteRestart();
 		animationManager.AnimationDelegator.InvokePlayIcon(false);
 		director.SetPlaybackState(new NormalPlaybackState(director, animationManager));
+	}
+
+	public void PlayAndSound(int Ind)
+	{	/*
+		animationManager.PlaySound();
+		animationManager.SetSpeed(animationManager.LastSpeed);
+		animationManager.shouldPlaying = true;
+		animationManager.ClickPlaying = true;*/
 	}
 }
 

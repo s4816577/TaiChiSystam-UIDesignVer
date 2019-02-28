@@ -19,17 +19,20 @@ public class TaichiMovement
     public string MovementName { get { return movementName; } }
     private AudioClip sound;
     public AudioClip Sound { get { return sound; } }
+	private AudioClip numbersound;
+	public AudioClip NumberSound { get { return numbersound; } }
 
-    // Taichi Acntion list.
-    private List<TaichiAction> taichiActionArray;
+	// Taichi Acntion list.
+	private List<TaichiAction> taichiActionArray;
     public List<TaichiAction> TaichiActionArray { get { return taichiActionArray; } }
 
-    public TaichiMovement(int movementNumber, float normalizedBeginTime, string movementName, AudioClip sound)
+    public TaichiMovement(int movementNumber, float normalizedBeginTime, string movementName, AudioClip sound, AudioClip numbersound)
     {
         this.movementNumber = movementNumber;
         this.normalizedBeginTime = normalizedBeginTime;
         this.movementName = movementName;
         this.sound = sound;
+		this.numbersound = numbersound;
     }
 
     public void SetTaichiActionArray(List<TaichiAction> taichiActionArray)

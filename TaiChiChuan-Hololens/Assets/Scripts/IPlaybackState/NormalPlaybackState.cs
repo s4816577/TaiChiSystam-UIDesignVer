@@ -16,7 +16,8 @@ public class NormalPlaybackState : IPlaybackState
         this.director = director;
         this.animationManager = animationManager;
         Pause();
-    }
+		//Debug.Log("haha!");
+	}
 
     public void Update()
     {
@@ -145,5 +146,14 @@ public class NormalPlaybackState : IPlaybackState
 		animationManager.SetReatartInd(Ind);
 		animationManager.ExecuteRestart();
 		animationManager.AnimationDelegator.InvokePlayIcon(false);
+	}
+
+	public void PlayAndSound(int Ind)
+	{
+		animationManager.LockDuplicate = true;
+		animationManager.PlaySoundInd(Ind);
+		animationManager.SetSpeed(animationManager.LastSpeed);
+		animationManager.shouldPlaying = true;
+		animationManager.ClickPlaying = true;
 	}
 }

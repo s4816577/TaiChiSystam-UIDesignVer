@@ -59,6 +59,6 @@ public class CoachAvatar : IAvatar
 	{
 		coach.localPosition = new Vector3(0.0f, restartErrorOfYdirection[restartInd], 0.0f);
 		coach.rotation = clock.rotation;
-        coach.transform.Rotate(new Vector3(0, rotationOfYAxis[restartInd], 0));
+        //coach.transform.Rotate(new Vector3(0, rotationOfYAxis[restartInd], 0));
     }
 }

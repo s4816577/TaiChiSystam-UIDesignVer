@@ -44,6 +44,6 @@ public class TeachAssistantAvatar : IAvatar
 	{
 		teachAssistant.localPosition = new Vector3(0.0f, restartErrorOfYdirection[restartInd], 0.0f);
 		teachAssistant.rotation = clock.rotation;
-        teachAssistant.transform.Rotate(new Vector3(0, rotationOfYAxis[restartInd], 0));
+        //teachAssistant.transform.Rotate(new Vector3(0, rotationOfYAxis[restartInd], 0));
     }
 }

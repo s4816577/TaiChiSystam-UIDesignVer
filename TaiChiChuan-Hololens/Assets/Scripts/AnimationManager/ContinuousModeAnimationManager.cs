@@ -54,4 +54,14 @@ public class ContinuousModeAnimationManager : AnimationManager
 	{
 		//Do nothing
 	}
+
+	public override void PlaySoundInd(int Ind)
+	{
+		//Do nothing
+	}
+
+	public override void Replay()
+	{
+		//Do nothing
+	}
 }

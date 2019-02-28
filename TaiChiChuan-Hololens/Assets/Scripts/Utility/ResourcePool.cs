@@ -70,7 +70,7 @@ public class ResourcePool
                     currentMovementNumber,
                     1.0f * frameNumberBegin / totalFrameNumber,
                     words[2],
-                    Resources.Load<AudioClip>("Sound/movement_sound/" + words[2]));
+                    Resources.Load<AudioClip>("Sound/movement_sound/" + words[2]), Resources.Load<AudioClip>("Sound/movement_sound/" + currentMovementNumber.ToString()));
 
                 if (taichiMovementArray.Count > 0)
                 {

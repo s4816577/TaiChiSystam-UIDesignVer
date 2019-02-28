@@ -32,6 +32,7 @@ public class Director : MonoBehaviour
 	public bool seriesMode = false;
 	public bool singleMode = false;
 	private bool showingPause = true;
+	private bool showingPlay = true;
 	private bool IsRecording = false;
 	public bool IsUsingHelpInSingleMode = false;
 
@@ -86,21 +87,21 @@ public class Director : MonoBehaviour
 
 						if (count == 1)
 						{
-							Invoke("GoToDetailSingleMode", 1f);
+							Invoke("Replay", 1f);
 						}
-						else if (count == 2)
+						else if (count >= 2)
 						{
-							CancelInvoke("GoToDetailSingleMode");
-							Invoke("GoBackMainMenu", 1f);
+							CancelInvoke("Replay");
+							GoBackMainMenu();
 						}
-						else if (count >= 3)
+						/*else if (count >= 3)
 						{
 							CancelInvoke("GoToDetailSingleMode");
 							CancelInvoke("GoBackMainMenu");
 							Play();							
-						}
+						}*/
 					}
-					else if (stageCode[stageCode.Count - 1] == 8)
+					/*else if (stageCode[stageCode.Count - 1] == 8)
 					{
 						count++;
 
@@ -119,7 +120,7 @@ public class Director : MonoBehaviour
 							CancelInvoke("Next");
 							Last();
 						}
-					}
+					}*/
 				}
 				else if (singleMode)
 				{
@@ -131,17 +132,17 @@ public class Director : MonoBehaviour
 						{
 							Invoke("GoToDetailMode", 1f);
 						}
-						else if (count == 2)
+						else if (count >= 2)
 						{
 							CancelInvoke("GoToDetailMode");
-							Invoke("GoBackSingleMenu", 1f);
+							GoBackSingleMenu();
 						}
-						else if (count >= 3)
+						/*else if (count >= 3)
 						{
 							CancelInvoke("GoToDetailMode");
 							CancelInvoke("GoBackSingleMenu");
 							Play();
-						}
+						}*/
 					}
 					else if (stageCode[stageCode.Count - 1] == 3)
 					{
@@ -315,8 +316,15 @@ public class Director : MonoBehaviour
     {
 		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 3 && stageCode[stageCode.Count - 1] != 8)
 		{
-			SaveInformation("觸發Play");
-			userInterface.CreateCommandName("Play");
+			if (showingPlay)
+			{
+				SaveInformation("觸發Play");
+				userInterface.CreateCommandName("Play");
+			}
+			else
+			{
+				showingPlay = true;
+			}
 			playbackState.Play();
 			count = 0;
 		}
@@ -340,8 +348,8 @@ public class Director : MonoBehaviour
 		{
 			if (showingPause)
 			{
-				SaveInformation("觸發Pause");
-				userInterface.CreateCommandName("Pause");
+				SaveInformation("觸發Stop");
+				userInterface.CreateCommandName("Stop");
 			}
 			else
 			{
@@ -427,7 +435,7 @@ public class Director : MonoBehaviour
 
     public void Next()
     {
-		if (!IsUsingControlPanel)
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 2)
 		{
 			SaveInformation("觸發Next");
 			userInterface.CreateCommandName("Next");
@@ -438,7 +446,7 @@ public class Director : MonoBehaviour
 
     public void Last()
     {
-		if (!IsUsingControlPanel)
+		if (!IsUsingControlPanel && stageCode[stageCode.Count - 1] != 2)
 		{
 			SaveInformation("觸發Last");
 			userInterface.CreateCommandName("Last");
@@ -650,7 +658,7 @@ public class Director : MonoBehaviour
 	{
 		if (stageCode[stageCode.Count - 1] == 2)
 		{
-			SaveInformation("選擇第" + Ind.ToString() + "招，並進入單招模式");
+			SaveInformation("選擇第" + (Ind+1).ToString() + "招，並進入單招模式");
 		}
 		DisableUsingControlPanel();
 		//userInterface.CreateCommandName("Change Movement");
@@ -658,6 +666,7 @@ public class Director : MonoBehaviour
 		avatarsController.SetToFront();
 		playbackState.SetRestartInd(Ind);
 		count = 0;
+		playbackState.PlayAndSound(Ind);
 		//Invoke("DisableUsingControlPanel", 2f);
 	}
 	/*
@@ -684,15 +693,17 @@ public class Director : MonoBehaviour
 	private void GoBackSingleMode()
 	{
 		SaveInformation("回到單招模式");
-		NotShowingPauseLog();
+		//NotShowingPauseLog();
 		stageCode.RemoveAt(stageCode.Count - 1);
-		Pause();
+		//Pause();
 		playbackState.SetRestartInd(animationManager.restartInd);
+		playbackState.PlayAndSound(animationManager.restartInd);
 		count = 0;
 	}
 
 	private void GoToDetailMode()
 	{
+		PlaySoundOfDetailedMode();
 		SaveInformation("進入分解動作");
 		NotShowingPauseLog();
 		Pause();
@@ -733,6 +744,7 @@ public class Director : MonoBehaviour
 		//no need to pop
 		//stageCode.RemoveAt(stageCode.Count - 1);
 		SetSingleModeControlPanel();
+		PlaySoundOfSingleMode();
 		count = 0;
 	}
 
@@ -797,12 +809,13 @@ public class Director : MonoBehaviour
 	public void UnitTest()
 	{
 		ActiveAvatars();
-		SetRestartInd(14);
+		SetRestartInd(3);
+		//GoToDetailMode();
 	}
 
 	public void UnitTestTwo()
 	{
-		GoBackSeriesMode();
+		Replay();
 	}
 
 	public void HeightUp()
@@ -834,5 +847,43 @@ public class Director : MonoBehaviour
 	public void NotShowingPauseLog()
 	{
 		showingPause = false;
+	}
+
+	public void NotShowingPlayLog()
+	{
+		showingPlay = false;
+	}
+
+	public void PlaySoundOfSeriesMode()
+	{
+		AudioClip audio =  Resources.Load<AudioClip>("Sound/套路模式");
+		audioSource.PlayOneShot(audio);
+	}
+
+	public void PlaySoundOfSingleMode()
+	{
+		AudioClip audio = Resources.Load<AudioClip>("Sound/單招模式");
+		audioSource.Stop();
+		animationManager.ClearAudio();
+		audioSource.PlayOneShot(audio);
+		playbackState.Pause();
+	}
+
+	public void PlaySoundOfDetailedMode()
+	{
+		AudioClip audio = Resources.Load<AudioClip>("Sound/分解動作");
+		audioSource.Stop();
+		animationManager.ClearAudio();
+		audioSource.PlayOneShot(audio);
+		playbackState.Pause();
+	}
+
+	public void Replay()
+	{
+		SaveInformation("觸發Replay");
+		userInterface.CreateCommandName("Replay");
+		NotShowingPlayLog();
+		animationManager.Replay();
+		count = 0;
 	}
 }

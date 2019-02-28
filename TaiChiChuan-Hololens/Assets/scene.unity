@@ -797,7 +797,7 @@ MonoBehaviour:
   - Keyword: HeightUp
     KeyCode: 105
   - Keyword: HeightDown
-    KeyCode: 111
+    KeyCode: 45
   - Keyword: UnitTestTwo
     KeyCode: 121
   - Keyword: Help

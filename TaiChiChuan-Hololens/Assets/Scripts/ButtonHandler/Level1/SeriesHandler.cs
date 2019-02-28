@@ -25,6 +25,7 @@ public class SeriesHandler : ButtonHandler
 		director.stageCode.Add(1);
 		director.seriesMode = true;
 		director.ResetCount();
+		director.PlaySoundOfSeriesMode();
 		director.SetRestartInd(0);
 		if (director.singleMode)
 			director.singleMode = false;
