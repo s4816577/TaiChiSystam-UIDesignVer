@@ -13,7 +13,7 @@ Select Release/x86/Device when building to advoid lag
 1.套路模式和單招模式中指令說明按鈕  
 2.壓力鞋墊加入  
 3.單招模式和套路模式改成單招練習和套路練習   
-4.指令說明改成操作說明 ＜/br＞
+4.指令說明改成操作說明
 # Finish
 1.十字手最後不要接到t pose  
 2.套路模式下一招和上一招 要快轉  
