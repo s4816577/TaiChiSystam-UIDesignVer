@@ -809,8 +809,8 @@ public class Director : MonoBehaviour
 	public void UnitTest()
 	{
 		ActiveAvatars();
-		SetRestartInd(3);
-		//GoToDetailMode();
+		SetRestartInd(0);
+		GoToDetailMode();
 	}
 
 	public void UnitTestTwo()
