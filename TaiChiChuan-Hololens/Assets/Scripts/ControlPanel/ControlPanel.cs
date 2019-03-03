@@ -29,7 +29,7 @@ public abstract class ControlPanel : MonoBehaviour
 		gaze.transform.position = Camera.main.transform.position + DISTANT2CONTROLPANEL * Camera.main.transform.forward;
 		gaze.transform.forward = Camera.main.transform.forward;
 		// Gaze too right, left, up, down
-		
+		/*
 		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 18.0f ||
 			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -18.0f ||
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > 8.0f ||
@@ -38,8 +38,8 @@ public abstract class ControlPanel : MonoBehaviour
 			moveToGaze = true;
 		}
 
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 12.0f &&
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -12.0f &&
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f &&
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 6.0f &&
 			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -6.0f)
 		{
@@ -48,10 +48,35 @@ public abstract class ControlPanel : MonoBehaviour
 
 		if (moveToGaze)
 		{
-			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.03f);
-			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.03f);
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.07f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.07f);
+		}*/
+
+		RaycastHit hitInfo;
+		if (Physics.Raycast(
+				Camera.main.transform.position,
+				Camera.main.transform.forward,
+				out hitInfo,
+				20.0f,
+				Physics.DefaultRaycastLayers) == false)
+		{
+			moveToGaze = true;
 		}
-		
+
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f &&
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x < 6.0f &&
+			gaze.transform.rotation.eulerAngles.x - transform.rotation.eulerAngles.x > -6.0f)
+		{
+			moveToGaze = false;
+		}
+
+		if (moveToGaze)
+		{
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.035f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.035f);
+		}
+
 		/*
 		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 18.0f ||
 			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -18.0f ||
@@ -62,6 +87,7 @@ public abstract class ControlPanel : MonoBehaviour
 			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.03f);
 		}*/
 	}
+
 	/*
 	void Transfer()
 	{

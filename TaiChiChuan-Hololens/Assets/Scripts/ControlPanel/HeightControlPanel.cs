@@ -34,14 +34,14 @@ public class HeightControlPanel : MonoBehaviour
 		gaze.transform.position = Camera.main.transform.position + DISTANT2CONTROLPANEL * Camera.main.transform.forward;
 		gaze.transform.forward = Camera.main.transform.forward;
 		// Gaze too right, left, up, down
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 15.0f ||
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -15.0f)
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > 18.0f ||
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < -18.0f)
 		{
 			moveToGaze = true;
 		}
 
-		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 1.0f &&
-			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -1.0f )
+		if (gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y < 6.0f &&
+			gaze.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y > -6.0f )
 		{
 			moveToGaze = false;
 		}
@@ -50,9 +50,9 @@ public class HeightControlPanel : MonoBehaviour
 		{
 			Vector3 currentPos = transform.position;
 			Vector3 currentQuat = transform.rotation.eulerAngles;
-			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.1f);
+			transform.position = Vector3.Lerp(transform.position, gaze.transform.position, 0.05f);
 			transform.position = new Vector3(transform.position.x, currentPos.y, transform.position.z);
-			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.1f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, gaze.transform.rotation, 0.05f);
 			transform.rotation = Quaternion.Euler(currentQuat.x, transform.rotation.eulerAngles.y, currentQuat.z);
 		}
 
